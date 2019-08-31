@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <title>自由的笔记本</title>
+    <meta name="viewport" content="width=device-width,maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <script type="text/javascript" src="./dist/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="./dist/css/mdui.min.css">
+    <script src="./dist/js/mdui.min.js"></script>
+    <style>body{font-family:Microsoft Yahei,serif;}.main{min-width:320px;max-width:600px;margin-top:200px;}.submitButton{margin-top:20px;}@media only screen and (max-width:800px){.main{margin-top:80px;}}</style>
+</head>
+<body class="mdui-theme-primary-blue-grey">
+
+
+<div class="mdui-container main">
+    <div class="mdui-center mdui-text-color-grey-800 mdui-text-center" style="float: left;width:100%;font-size: 35px;">
+        自由的笔记本
+    </div>
+
+
+
+    <div class="mdui-center" style="width: 100%;float: left">
+
+        <div class="mdui-tab mdui-tab-centered mdui-m-t-5" mdui-tab>
+            <a href="#example1-tab1" class="mdui-ripple">开始</a>
+            <a href="#example1-tab2" class="mdui-ripple">历史</a>
+        </div>
+
+
+        <div id="example1-tab1" class="mdui-p-a-2">
+            <div class="mdui-textfield">
+                <input id="inputText" class="mdui-textfield-input" type="text" placeholder="输入笔记内容" AUTOCOMPLETE="off"/>
+            </div>
+            <button id="submitButton" type="submit" value="记录" onclick="submit()" class=" mdui-ripple mdui-color-pink-400 submitButton mdui-btn mdui-btn-raised  mdui-center">
+                写下
+            </button>
+
+
+        </div>
+        <div id="example1-tab2" class="mdui-p-a-2">
+
+            <div class="mdui-panel mdui-panel-popout" mdui-panel>
+
+                <div class="mdui-panel-item">
+                    <div class="mdui-panel-item-header">早上
+                    </div>
+                    <div class="mdui-panel-item-body">
+                        <p>First content</p>
+                        <p>First content</p>
+                        <p>First content</p>
+                        <p>First content</p>
+                        <p>First content</p>
+                        <p>First content</p>
+
+
+                        <button class="mdui-btn mdui-color-theme-accent" mdui-menu="{target: '#example-2'}">操作</button>
+                        <ul class="mdui-menu" id="example-2">
+                            <li class="mdui-menu-item">
+                                <a href="javascript:;" class="mdui-ripple">
+                                    <i class="mdui-menu-item-icon mdui-icon material-icons">remove_red_eye</i>修改
+                                </a>
+                            </li>
+                            <li class="mdui-menu-item">
+                                <a href="javascript:;" class="mdui-ripple">
+                                    <i class="mdui-menu-item-icon mdui-icon material-icons">delete</i>删除
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mdui-panel-item">
+                    <div class="mdui-panel-item-header">Second</div>
+                    <div class="mdui-panel-item-body">
+                        <p>Second content</p>
+                        <p>Second content</p>
+                        <p>Second content</p>
+                        <p>Second content</p>
+                        <p>Second content</p>
+                        <p>Second content</p>
+                    </div>
+                </div>
+
+                <div class="mdui-panel-item">
+                    <div class="mdui-panel-item-header">Third</div>
+                    <div class="mdui-panel-item-body">
+                        <p>Third content</p>
+                        <p>Third content</p>
+                        <p>Third content</p>
+                        <p>Third content</p>
+                        <p>Third content</p>
+                        <p>Third content</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+<div class="" style="">
+</div>
+<script>
+
+
+    var url = "http://127.0.0.1:9999/";
+
+    //检查cookie，如果没有登录的信息，则弹出对话框
+
+    $(".operation-menu_button").click(function () {
+
+        mdui.snackbar({message:'未输入关键词！'})
+    });
+    
+    $("#submitButton").click(function () {
+        //向数据库提交
+
+
+
+
+    })
+
+
+
+</script>
+</body>
+</html>
