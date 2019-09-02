@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
 <head>
@@ -10,7 +9,13 @@
     <script type="text/javascript" src="./dist/js/jquery.min.js"></script>
     <link rel="stylesheet" href="./dist/css/mdui.min.css">
     <script src="./dist/js/mdui.min.js"></script>
-    <style>body{font-family:Microsoft Yahei,serif;}.main{min-width:320px;max-width:600px;margin-top:200px;}.submitButton{margin-top:20px;}@media only screen and (max-width:800px){.main{margin-top:80px;}}</style>
+    <style>body{font-family:Microsoft Yahei,serif;}.main{min-width:320px;max-width:600px;margin-top:200px;}.submitButton{margin-top:20px;}@media only screen and (max-width:800px){.main{margin-top:80px;}}
+
+    .mdui-overlay{
+        opacity: 1!important;
+    }
+
+    </style>
 </head>
 <body class="mdui-theme-primary-blue-grey">
 
@@ -26,7 +31,7 @@
 
         <div class="mdui-tab mdui-tab-centered mdui-m-t-5" mdui-tab>
             <a href="#example1-tab1" class="mdui-ripple">开始</a>
-            <a href="#example1-tab2" class="mdui-ripple">历史</a>
+            <a id="toexample1-tab2" href="#example1-tab2" class="mdui-ripple">历史</a>
         </div>
 
 
@@ -34,7 +39,7 @@
             <div class="mdui-textfield">
                 <input id="inputText" class="mdui-textfield-input" type="text" placeholder="输入笔记内容" AUTOCOMPLETE="off"/>
             </div>
-            <button id="submitButton" type="submit" value="记录" onclick="submit()" class=" mdui-ripple mdui-color-pink-400 submitButton mdui-btn mdui-btn-raised  mdui-center">
+            <button id="submitButton" value="记录"  class=" mdui-ripple mdui-color-pink-400 submitButton mdui-btn mdui-btn-raised  mdui-center">
                 写下
             </button>
 
@@ -42,59 +47,8 @@
         </div>
         <div id="example1-tab2" class="mdui-p-a-2">
 
-            <div class="mdui-panel mdui-panel-popout" mdui-panel>
+            <div class="mdui-panel mdui-panel-popout notebook_content" mdui-panel>
 
-                <div class="mdui-panel-item">
-                    <div class="mdui-panel-item-header">早上
-                    </div>
-                    <div class="mdui-panel-item-body">
-                        <p>First content</p>
-                        <p>First content</p>
-                        <p>First content</p>
-                        <p>First content</p>
-                        <p>First content</p>
-                        <p>First content</p>
-
-
-                        <button class="mdui-btn mdui-color-theme-accent" mdui-menu="{target: '#example-2'}">操作</button>
-                        <ul class="mdui-menu" id="example-2">
-                            <li class="mdui-menu-item">
-                                <a href="javascript:;" class="mdui-ripple">
-                                    <i class="mdui-menu-item-icon mdui-icon material-icons">remove_red_eye</i>修改
-                                </a>
-                            </li>
-                            <li class="mdui-menu-item">
-                                <a href="javascript:;" class="mdui-ripple">
-                                    <i class="mdui-menu-item-icon mdui-icon material-icons">delete</i>删除
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="mdui-panel-item">
-                    <div class="mdui-panel-item-header">Second</div>
-                    <div class="mdui-panel-item-body">
-                        <p>Second content</p>
-                        <p>Second content</p>
-                        <p>Second content</p>
-                        <p>Second content</p>
-                        <p>Second content</p>
-                        <p>Second content</p>
-                    </div>
-                </div>
-
-                <div class="mdui-panel-item">
-                    <div class="mdui-panel-item-header">Third</div>
-                    <div class="mdui-panel-item-body">
-                        <p>Third content</p>
-                        <p>Third content</p>
-                        <p>Third content</p>
-                        <p>Third content</p>
-                        <p>Third content</p>
-                        <p>Third content</p>
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -110,7 +64,28 @@
 <script>
 
 
-    var url = "http://127.0.0.1:9999/";
+    var contentItemTemplate = '<div class="mdui-panel-item" id="item_{ITEM_ID}">\n' +
+        '                    <div class="mdui-panel-item-header">{ITEM_DATE}\n' +
+        '                    </div>\n' +
+        '                    <div class="mdui-panel-item-body"><p>\n' +
+        '                        {ITEM_CONTENT}\n' +
+        '                        </p><button class="mdui-btn mdui-color-theme-accent" mdui-menu="{target: \'#example-{ITEM_ID}\'}">操作</button>\n' +
+        '                        <ul class="mdui-menu" id="example-{ITEM_ID}">\n' +
+        '                            <li class="mdui-menu-item">\n' +
+        '                                <a href="#" class="mdui-ripple item_edit" date-id="{ITEM_ID}">\n' +
+        '                                    <i class="mdui-menu-item-icon mdui-icon material-icons">remove_red_eye</i>修改\n' +
+        '                                </a>\n' +
+        '                            </li>\n' +
+        '                            <li class="mdui-menu-item">\n' +
+        '                                <a href="javascript:;" class="mdui-ripple item_delete" date-id="{ITEM_ID}">\n' +
+        '                                    <i class="mdui-menu-item-icon mdui-icon material-icons">delete</i>删除\n' +
+        '                                </a>\n' +
+        '                            </li>\n' +
+        '                        </ul>\n' +
+        '                    </div>\n' +
+        '                </div>';
+
+    var url = "http://localhost:9999";
 
     //检查cookie，如果没有登录的信息，则弹出对话框
 
@@ -118,15 +93,122 @@
 
         mdui.snackbar({message:'未输入关键词！'})
     });
+
+
+
+    $("#toexample1-tab2").on("show.mdui.tab",function () {
+        //请求数据
+
+        $.ajax({
+            type: 'Get',
+            url: url+"/list",
+            success: function(data) {
+                //
+                var contentContainer = $(".notebook_content");
+                contentContainer.html("");
+                // data = JSON.parse(data)
+                console.log(data)
+                if (data){
+                    for (var i in data){
+                        var item = data[i];
+                        //匹配替换
+                        var itemHtml = contentItemTemplate
+                            .replace("{ITEM_CONTENT}",item.content)
+                            .replace("{ITEM_DATE}",item.date)
+                            .replace("{ITEM_ID}",item.id)
+                            .replace("{ITEM_ID}",item.id)
+                            .replace("{ITEM_ID}",item.id)
+                            .replace("{ITEM_ID}",item.id)
+                            .replace("{ITEM_ID}",item.id);
+                        contentContainer.append(itemHtml);
+                    }
+
+                }
+
+            }
+        });
+
+    });
     
     $("#submitButton").click(function () {
         //向数据库提交
-
-
-
+        var content = $("#inputText").val();
+        //显示等待弹窗
+        $.ajax({
+            type: 'Get',
+            url: url+"/add?content="+content,
+            success: function(data) {
+                mdui.snackbar({
+                    message: '写下了'
+                });
+            }
+        });
 
     })
 
+
+
+    $("body").delegate(".item_edit","click",function(){
+
+        console.log("ok");
+
+        mdui.alert('你即将修改内容');
+
+
+        var id = $(this).attr("date-id");
+        // 多行文本框
+        mdui.prompt('输入你修改的内容',
+            function (value) {
+                $.ajax({
+                    type: 'Get',
+                    url: url+"/edit?content="+value+"&id=" + id,
+                    success: function(data) {
+
+                        $("#item_"+id).find("p").text(value);
+                        mdui.snackbar({
+                            message: '修改了'
+                        });
+                        $(".mdui-dialog").remove();
+                        $(".mdui-overlay").remove();
+                    }
+                });
+            },
+            function (value) {
+                $(".mdui-dialog").remove();
+                $(".mdui-overlay").remove();
+            },
+            {
+                type: 'textarea',
+                modal: true
+            }
+        );
+
+
+    });
+
+
+    $(".mdui-dialog").on("closed.mdui.dialog",function () {
+        $(".mdui-dialog").remove();
+        $(".mdui-overlay").remove();
+    })
+    $("body").delegate(".item_delete","click",function(e){
+
+        var id = $(this).attr("date-id");
+        $.ajax({
+            type: 'Get',
+            url: url+"/delete?id=" + id,
+            success: function(data) {
+
+                $("#item_"+id).remove();
+                mdui.snackbar({
+                    message: '销毁了'
+                });
+            },error: function () {
+                console.log("error")
+
+            }
+        });
+    });
 
 
 </script>
